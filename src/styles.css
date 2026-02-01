@@ -1,0 +1,15 @@
+:root {
+  --bg: #121212;
+  --panel: #1f2937;
+  --accent: #06b6d4;
+  --text: #ffffff;
+}
+body { margin:0; font-family: Inter, system-ui; background:var(--bg); color:var(--text); height:100vh; display:flex; align-items:center; justify-content:center;}
+.app { width:360px; background:var(--panel); border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,.6); overflow:hidden;}
+.topbar { padding:10px; display:flex; justify-content:flex-end; }
+.force-btn { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.06); padding:6px 10px; border-radius:8px;}
+.main { padding:12px; }
+.calc .display { background:#0005; padding:18px; border-radius:8px; text-align:right; font-size:24px;}
+.calc .expr { color:#bbb; font-size:12px; text-align:right; margin-top:6px; min-height:18px;}
+.pad { display:grid; grid-template-columns: repeat(4,1fr); gap:8px; margin-top:12px;}
+.key { padding:18px; background:#111827; color:var(--text); border:none; border-radius:8px; font-size:16px;}
