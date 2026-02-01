@@ -6,20 +6,22 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="topbar">
-        <button className="force-btn" onClick={() => {
-          const v = prompt('Ustaw force number', force?.toString() ?? '')
-          if (v !== null) {
-            const n = Number(v)
-            if (!Number.isNaN(n)) setForce(n)
-          }
-        }}>
-          Force: {force ?? 'brak'}
-        </button>
-      </header>
-      <main className="main">
-        <Calculator force={force ?? 0} />
-      </main>
+      <div className="surface">
+        <header className="topbar">
+          <button className="force-btn" onClick={() => {
+            const v = prompt('Ustaw force number', force?.toString() ?? '')
+            if (v !== null) {
+              const n = Number(v)
+              if (!Number.isNaN(n)) setForce(n)
+            }
+          }}>
+            Force: {force ?? 'brak'}
+          </button>
+        </header>
+        <main className="main">
+          <Calculator force={force ?? 0} />
+        </main>
+      </div>
     </div>
   )
 }
