@@ -1,7 +1,8 @@
 {
   "name": "fCalc — Magic Calculator",
   "short_name": "fCalc",
-  "start_url": "/",
+  "start_url": "/fCalc/",
+  "scope": "/fCalc/",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#ff9800",
