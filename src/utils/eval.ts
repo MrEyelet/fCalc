@@ -6,6 +6,7 @@ export function formatNumber(n: number) {
 }
 
 function isOp(c: string) { return ['+','-','*','/'].includes(c) }
+function isPercent(c: string) { return c === '%' }
 function prec(op: string) {
   if (op === '+' || op === '-') return 1
   if (op === '*' || op === '/') return 2
@@ -16,13 +17,13 @@ export function evaluateExpression(s: string): number {
   if (!s) return 0
   // allow 'x' as multiply
   const ss = s.replace(/x/g, '*').trim()
-  // sanitize: allow digits, operators, parentheses and dot
-  if (!/^[0-9+\-*/().\s]+$/.test(ss)) return NaN
+  // sanitize: allow digits, operators, parentheses, dot, percent
+  if (!/^[0-9+\-*/().%\s]+$/.test(ss)) return NaN
 
   const output: string[] = []
   const ops: string[] = []
   const tokens: string[] = []
-  // tokenize
+  // tokenize (with percent support)
   let i = 0
   while (i < ss.length) {
     const c = ss[i]
@@ -30,12 +31,23 @@ export function evaluateExpression(s: string): number {
       let num = c
       i++
       while (i < ss.length && /[\d\.]/.test(ss[i])) { num += ss[i++]}
-      tokens.push(num)
+      // check for percent directly after number
+      if (ss[i] === '%') {
+        tokens.push('(')
+        tokens.push(num)
+        tokens.push('/')
+        tokens.push('100')
+        tokens.push(')')
+        i++
+      } else {
+        tokens.push(num)
+      }
       continue
     }
     if (isOp(c) || c === '('|| c === ')') {
       tokens.push(c)
     }
+    // ignore standalone % (should not happen)
     i++
   }
 

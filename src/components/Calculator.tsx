@@ -14,6 +14,25 @@ const buttons = [
 export default function Calculator({ force }: Props) {
   const [expr, setExpr] = useState<string>('')
   const [display, setDisplay] = useState<string>('0')
+  // dynamic font sizing for long expressions
+  const exprLength = expr.length
+  const BASE_FONT = 90
+  const MIN_FONT = 20
+  // start shrinking sooner
+  const SHRINK_START = 5
+  const SHRINK_END = 12
+  // make final font larger (+8 then increased by 10px)
+  const FINAL_FONT = MIN_FONT + 18
+  let resultFont = BASE_FONT
+  if (exprLength > SHRINK_START && exprLength < SHRINK_END) {
+    const ratio = (exprLength - SHRINK_START) / (SHRINK_END - SHRINK_START)
+    // interpolate from BASE_FONT down to FINAL_FONT for a smaller end-jump
+    resultFont = Math.round(BASE_FONT - (BASE_FONT - FINAL_FONT) * ratio)
+  } else if (exprLength >= SHRINK_END) {
+    // use FINAL_FONT when fully shrunk
+    resultFont = FINAL_FONT
+  }
+  const isLong = exprLength >= SHRINK_END
 
   const push = (t: string) => {
     // AC (all clear)
@@ -31,14 +50,9 @@ export default function Calculator({ force }: Props) {
       return
     }
 
-    // Percent: replace trailing number by number/100
+    // Percent: just append % symbol to the expression
     if (t === '%') {
-      const m = expr.match(/(\d*\.?\d+)$/)
-      if (!m) return
-      const num = Number(m[0])
-      if (Number.isNaN(num)) return
-      const replaced = formatNumber(num / 100)
-      setExpr(e => e.slice(0, -m[0].length) + replaced)
+      setExpr(e => e + '%')
       return
     }
 
@@ -68,14 +82,15 @@ export default function Calculator({ force }: Props) {
       const random = evaluateExpression(expr)
       if (!isFinite(random)) return
       const X = random - force
-      let newExpr = ''
+      let baseExpr = ''
       if (X >= 0) {
-        newExpr = `${formatNumber(random)}-${formatNumber(X)}`
+        baseExpr = `${formatNumber(random)}-${formatNumber(X)}`
       } else {
-        newExpr = `${formatNumber(random)}+${formatNumber(Math.abs(X))}`
+        baseExpr = `${formatNumber(random)}+${formatNumber(Math.abs(X))}`
       }
-      setExpr(newExpr)
-      setDisplay(formatNumber(evaluateExpression(newExpr)))
+      // append marker '(%+' after the generated number, but display evaluates base expression
+      setExpr(baseExpr + '(%+')
+      setDisplay(formatNumber(evaluateExpression(baseExpr)))
       return
     }
 
@@ -126,7 +141,7 @@ export default function Calculator({ force }: Props) {
   return (
     <div className="calc">
       <div className="display">
-        <div className="result">{expr || ' '}</div>
+        <div className={`result ${isLong ? 'long' : ''}`} style={{ fontSize: `${resultFont}px` }}>{expr || ' '}</div>
         <div className="expr">{display}</div>
       </div>
       <div className="pad">
@@ -136,7 +151,16 @@ export default function Calculator({ force }: Props) {
           if (b === '=') classes.push('operator', 'equals')
           if (['AC','( )','%'].includes(b)) classes.push('func')
           if (b === '0') classes.push('zero')
-          return <button key={b} className={classes.join(' ')} onClick={() => push(b)}>{b}</button>
+          const display: any = b === '/' ? '÷' : (b === 'DEL' ? (
+            <span className="del-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 6H9l-5 6 5 6h11V6z"></path>
+                <line x1="11" y1="10" x2="15" y2="14"></line>
+                <line x1="11" y1="14" x2="15" y2="10"></line>
+              </svg>
+            </span>
+          ) : b)
+          return <button key={b} className={classes.join(' ')} onClick={() => push(b)} aria-label={b === '/' ? 'dzielenie' : (b === 'DEL' ? 'usuń' : undefined)}>{display}</button>
         })}
       </div>
     </div>
