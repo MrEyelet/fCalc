@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Calculator from './components/Calculator'
 
 export default function App() {
-  const [force, setForce] = useState<number | null>(589375)
+  const [force, setForce] = useState<number | null>(882161)
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState<string>(force?.toString() ?? '')
 

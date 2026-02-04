@@ -14,7 +14,7 @@ function prec(op: string) {
 }
 
 export function evaluateExpression(s: string): number {
-  if (!s) return 0
+  if (!s || !s.trim()) return NaN
   // allow 'x' as multiply
   const ss = s.replace(/x/g, '*').trim()
   // sanitize: allow digits, operators, parentheses, dot, percent
@@ -50,6 +50,12 @@ export function evaluateExpression(s: string): number {
     // ignore standalone % (should not happen)
     i++
   }
+
+  // if expression starts or ends with an operator, treat as incomplete
+  if (tokens.length === 0) return NaN
+  const first = tokens[0]
+  const last = tokens[tokens.length - 1]
+  if (isOp(first) || isOp(String(last))) return NaN
 
   for (const t of tokens) {
     if (/^[\d.]+$/.test(t)) {

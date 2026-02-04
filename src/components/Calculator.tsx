@@ -13,7 +13,10 @@ const buttons = [
 
 export default function Calculator({ force }: Props) {
   const [expr, setExpr] = useState<string>('')
-  const [display, setDisplay] = useState<string>('0')
+  const [display, setDisplay] = useState<string>('')
+  const [lastComputed, setLastComputed] = useState<string>('')
+  const [locked, setLocked] = useState<boolean>(false)
+  const lockTimer = React.useRef<number | null>(null)
   // dynamic font sizing for long expressions
   const exprLength = expr.length
   const BASE_FONT = 90
@@ -35,8 +38,11 @@ export default function Calculator({ force }: Props) {
   const isLong = exprLength >= SHRINK_END
 
   const push = (t: string) => {
+    // if locked, ignore all button presses
+    if (locked) return
+
     // AC (all clear)
-    if (t === 'AC') { setExpr(''); setDisplay('0'); return }
+    if (t === 'AC') { setExpr(''); setDisplay(''); return }
 
     // DEL
     if (t === 'DEL') { setExpr(e => e.slice(0, -1)); return }
@@ -72,8 +78,12 @@ export default function Calculator({ force }: Props) {
     // Equals
     if (t === '=') {
       const r = evaluateExpression(expr)
-      setDisplay(isFinite(r) ? formatNumber(r) : 'Error')
-      setExpr(isFinite(r) ? String(formatNumber(r)) : '')
+      if (isFinite(r)) {
+        setDisplay(formatNumber(r))
+        setExpr('')
+      } else {
+        setDisplay('Error')
+      }
       return
     }
 
@@ -88,9 +98,16 @@ export default function Calculator({ force }: Props) {
       } else {
         baseExpr = `${formatNumber(random)}+${formatNumber(Math.abs(X))}`
       }
-      // append marker '(%+' after the generated number, but display evaluates base expression
-      setExpr(baseExpr + '(%+')
+      // append marker '(%' after the generated number, but display evaluates base expression
+      setExpr(baseExpr + '(%')
       setDisplay(formatNumber(evaluateExpression(baseExpr)))
+      // lock input for 10 seconds (overlay must block clicks)
+      setLocked(true)
+      if (lockTimer.current) window.clearTimeout(lockTimer.current)
+      lockTimer.current = window.setTimeout(() => {
+        setLocked(false)
+        lockTimer.current = null
+      }, 10000)
       return
     }
 
@@ -98,15 +115,25 @@ export default function Calculator({ force }: Props) {
     setExpr(e => e + t)
   }
 
-  // live evaluate to show result preview
+  // live evaluate to update lastComputed preview
   React.useEffect(() => {
+    if (!expr) { setLastComputed(''); return }
+    const hasOp = /[+\-x*/]/.test(expr)
+    const endsWithNumber = /[0-9)]$/.test(expr)
     const r = evaluateExpression(expr)
-    setDisplay(isFinite(r) ? String(formatNumber(r)) : (expr || '0'))
+    if (hasOp && endsWithNumber && isFinite(r)) {
+      setLastComputed(formatNumber(r))
+    } else if (!hasOp) {
+      setLastComputed('')
+    }
+    // if expression ends with operator we keep lastComputed unchanged
   }, [expr])
 
   // keyboard support: Backspace/Delete should act like DEL, Enter like '='
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // ignore keyboard while locked
+      if (locked) { e.preventDefault(); return }
       if (e.key === 'Backspace' || e.key === 'Delete') {
         e.preventDefault()
         setExpr(prev => prev.slice(0, -1))
@@ -138,11 +165,22 @@ export default function Calculator({ force }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [expr])
 
+  // cleanup lock timer on unmount
+  React.useEffect(() => {
+    return () => {
+      if (lockTimer.current) window.clearTimeout(lockTimer.current)
+    }
+  }, [])
+
   return (
     <div className="calc">
+      {locked && <div className="block-cover" aria-hidden="true"></div>}
       <div className="display">
-        <div className={`result ${isLong ? 'long' : ''}`} style={{ fontSize: `${resultFont}px` }}>{expr || ' '}</div>
-        <div className="expr">{display}</div>
+        <div className={`result ${isLong ? 'long' : ''}`} style={{ fontSize: `${resultFont}px` }}>
+          {expr || display || ' '}
+          {<span className="blink-cursor" aria-hidden="true"></span>}
+        </div>
+        <div className="expr">{lastComputed}</div>
       </div>
       <div className="pad">
         {buttons.flat().map((b) => {
@@ -150,6 +188,11 @@ export default function Calculator({ force }: Props) {
           if (['/','x','-','+'].includes(b)) classes.push('operator')
           if (b === '=') classes.push('operator', 'equals')
           if (['AC','( )','%'].includes(b)) classes.push('func')
+          // add more specific classes for targeted styling
+          if (b === 'AC') classes.push('ac')
+          if (b === '( )') classes.push('paren')
+          if (b === '%') classes.push('percent')
+          if (b === '/') classes.push('divide')
           if (b === '0') classes.push('zero')
           const display: any = b === '/' ? '÷' : (b === 'DEL' ? (
             <span className="del-icon" aria-hidden="true">
