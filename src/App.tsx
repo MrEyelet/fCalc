@@ -30,6 +30,24 @@ export default function App() {
     setOpen(false)
   }
 
+  const applyDateTimePlus5 = () => {
+    const now = new Date(Date.now() + 5 * 60 * 1000)
+    const d = now.getDate()
+    const m = now.getMonth() + 1
+    const y = now.getFullYear() % 100
+    const hh = now.getHours()
+    const mm = now.getMinutes()
+    // day without leading zero, month two-digit, year two-digit, hours/minutes two-digit
+    const dayStr = String(d)
+    const monthStr = m < 10 ? `0${m}` : String(m)
+    const yStr = y < 10 ? `0${y}` : String(y)
+    const hhStr = hh < 10 ? `0${hh}` : String(hh)
+    const mmStr = mm < 10 ? `0${mm}` : String(mm)
+    const s = `${dayStr}${monthStr}${yStr}${hhStr}${mmStr}`
+    setForce(Number(s))
+    setOpen(false)
+  }
+
   const applyTimePlus5 = () => {
     const now = new Date(Date.now() + 5 * 60 * 1000)
     const hh = now.getHours()
@@ -69,6 +87,7 @@ export default function App() {
               <div className="modal-actions">
                 <button className="btn" onClick={applyCustom}>Zapisz</button>
                 <button className="btn" onClick={applyDate}>Ustaw na dzisiejszą datę (ddmmyy)</button>
+                <button className="btn" onClick={applyDateTimePlus5}>Data i godzina (+5min)</button>
                 <button className="btn" onClick={applyTimePlus5}>Ustaw na czas +5m (hhmm)</button>
               </div>
               <button className="modal-close" onClick={() => setOpen(false)}>Anuluj</button>

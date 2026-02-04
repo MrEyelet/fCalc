@@ -17,25 +17,31 @@ export default function Calculator({ force }: Props) {
   const [lastComputed, setLastComputed] = useState<string>('')
   const [locked, setLocked] = useState<boolean>(false)
   const lockTimer = React.useRef<number | null>(null)
+  const resultRef = React.useRef<HTMLDivElement | null>(null)
+  const [resultFont, setResultFont] = React.useState<number>(90)
   // dynamic font sizing for long expressions
   const exprLength = expr.length
-  const BASE_FONT = 90
-  const MIN_FONT = 20
-  // start shrinking sooner
-  const SHRINK_START = 5
-  const SHRINK_END = 12
+  const BASE_FONT = 82
+  const MIN_FONT = 18
+  // start shrinking only after 9 characters to keep 9 digits visible
+  const SHRINK_START = 9
+  const SHRINK_END = 16
   // make final font larger (+8 then increased by 10px)
   const FINAL_FONT = MIN_FONT + 18
-  let resultFont = BASE_FONT
-  if (exprLength > SHRINK_START && exprLength < SHRINK_END) {
-    const ratio = (exprLength - SHRINK_START) / (SHRINK_END - SHRINK_START)
-    // interpolate from BASE_FONT down to FINAL_FONT for a smaller end-jump
-    resultFont = Math.round(BASE_FONT - (BASE_FONT - FINAL_FONT) * ratio)
-  } else if (exprLength >= SHRINK_END) {
-    // use FINAL_FONT when fully shrunk
-    resultFont = FINAL_FONT
-  }
   const isLong = exprLength >= SHRINK_END
+
+  // adjust font when expr changes (normal typing) — keep previous behaviour
+  React.useEffect(() => {
+    if (exprLength > SHRINK_START && exprLength < SHRINK_END) {
+      const ratio = (exprLength - SHRINK_START) / (SHRINK_END - SHRINK_START)
+      const f = Math.round(BASE_FONT - (BASE_FONT - FINAL_FONT) * ratio)
+      setResultFont(f)
+    } else if (exprLength >= SHRINK_END) {
+      setResultFont(FINAL_FONT)
+    } else {
+      setResultFont(BASE_FONT)
+    }
+  }, [exprLength])
 
   const push = (t: string) => {
     // if locked, ignore all button presses
@@ -142,6 +148,34 @@ export default function Calculator({ force }: Props) {
     // if expression ends with operator we keep lastComputed unchanged
   }, [expr])
 
+  // keep result scrolled to the end when content overflows
+  React.useEffect(() => {
+    const el = resultRef.current
+    if (!el) return
+    // if content wider than container, scroll to end
+    if (el.scrollWidth > el.clientWidth) {
+      // if we currently show an evaluated `display` (expr is empty), prefer
+      // to shrink the font rather than scroll — try to fit by decreasing font
+      if (!expr && display) {
+        let f = resultFont
+        // decrease until it fits or reach MIN_FONT
+        while (el.scrollWidth > el.clientWidth && f > MIN_FONT) {
+          f -= 1
+          el.style.fontSize = `${f}px`
+        }
+        setResultFont(f)
+        // ensure final scroll position is at end
+        el.scrollTo({ left: el.scrollWidth })
+      } else {
+        // use smooth scroll for nicer UX when typing
+        el.scrollTo({ left: el.scrollWidth, behavior: 'smooth' })
+      }
+    } else {
+      // if it fits, restore font to state value (in case inline style was used)
+      el.style.fontSize = `${resultFont}px`
+    }
+  }, [expr, display])
+
   // keyboard support: Backspace/Delete should act like DEL, Enter like '='
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -190,7 +224,7 @@ export default function Calculator({ force }: Props) {
     <div className="calc">
       {locked && <div className="block-cover" aria-hidden="true"></div>}
       <div className="display">
-        <div className={`result ${isLong ? 'long' : ''}`} style={{ fontSize: `${resultFont}px` }}>
+        <div ref={resultRef} className={`result ${isLong ? 'long' : ''}`} style={{ fontSize: `${resultFont}px` }}>
           {expr || display || ' '}
           {<span className="blink-cursor" aria-hidden="true"></span>}
         </div>

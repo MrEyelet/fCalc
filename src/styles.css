@@ -42,7 +42,7 @@ html, body, #root, .app { box-sizing: border-box; }
 
 /* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(2,6,12,0.6); display:flex; align-items:center; justify-content:center; z-index:60; }
-.modal { background:var(--panel); padding:18px; border-radius:12px; width:320px; box-shadow:0 20px 60px rgba(0,0,0,.6); color:var(--text); }
+.modal { background:#1b1e22; padding:18px; border-radius:12px; width:320px; box-shadow:0 20px 60px rgba(0,0,0,.6); color:var(--text); }
 .modal h3 { margin:0 0 12px 0; font-size:16px }
 .modal label { display:block; font-size:13px; color:var(--muted); }
 .modal input { width:100%; padding:8px 10px; margin:8px 0 12px 0; border-radius:8px; border:1px solid rgba(255,255,255,.04); background:rgba(0,0,0,0.2); color:var(--text) }
@@ -50,12 +50,12 @@ html, body, #root, .app { box-sizing: border-box; }
 .modal .btn { padding:10px 12px; border-radius:8px; background:rgba(255,255,255,0.03); color:var(--text); border:1px solid rgba(255,255,255,0.02); }
 .modal-close { margin-top:12px; background:transparent; border:none; color:var(--muted); cursor:pointer }
 
-.main { padding:12px; flex:1 1 auto; display:flex; min-height:0; }
+.main { flex:1 1 auto; display:flex; min-height:0; }
 .calc { padding-bottom: 0; width:100%; display:flex; flex-direction:column; height:100%; min-height:0; }
 .calc .display { background: transparent; padding:18px; border-radius:12px; text-align:right; font-size:32px; font-weight:500; box-shadow: inset 0 -1px 0 rgba(255,255,255,.02); color:var(--text); flex: 0 0 30%; }
 .calc .expr { color:var(--muted); font-size:14px; text-align:right; margin-top: 18px; min-height:18px; }
 
-.pad { display:grid; grid-template-columns: repeat(4,1fr); grid-auto-rows: auto; gap:2px; margin-top:8px; padding: 4px 6px 6px; flex: 0 0 70%; min-height:0; align-content:start; justify-items:center; align-items:center; overflow:auto }
+.pad { display:grid; grid-template-columns: repeat(4,1fr); grid-auto-rows: auto; gap:2px; margin-top:8px; padding: 4px 4px 4px; flex: 0 0 70%; min-height:0; align-content:start; justify-items:center; align-items:center; overflow:auto }
 /* Keys: circular, consistent size matching Motorola */
 .key { background:var(--key-bg); color:var(--text); border:none; font-size:28px; display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:1/1; border-radius:50%; box-shadow: 0 10px 26px var(--key-elev); transition: transform .06s ease, box-shadow .06s ease, background .06s ease; user-select:none; -webkit-tap-highlight-color: transparent; }
 .key:active { transform: translateY(2px) scale(.995); box-shadow: 0 6px 12px rgba(0,0,0,.6); }
@@ -88,10 +88,10 @@ html, body, #root, .app { box-sizing: border-box; }
 
 /* Display: bigger result for pixel-perfect match */
 
-.calc .display { background: transparent; padding:12px 14px; border-radius:12px; text-align:right; box-shadow: inset 0 -1px 0 rgba(255,255,255,.02); color:var(--text); }
+.calc .display { background: transparent; padding:12px 6px; border-radius:12px; text-align:right; box-shadow: inset 0 -1px 0 rgba(255,255,255,.02); color:var(--text); }
 .calc .display .expr { color:var(--muted); font-size:31px; text-align:right; margin-bottom:6px; min-height:20px; opacity:.95 }
-.calc .display .result { font-size:90px; font-weight:400; line-height:1; letter-spacing:-1px; white-space:nowrap; overflow-x:auto; -webkit-overflow-scrolling: touch; }
-.calc .display .result::-webkit-scrollbar { height: 6px; }
+.calc .display .result { font-size:90px; font-weight:400; line-height:1; letter-spacing:-1px; white-space:nowrap; overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; /* IE/Edge */ scrollbar-width: none; /* Firefox */ }
+.calc .display .result::-webkit-scrollbar { height: 0; display: none; }
 .calc .display .result::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 6px; }
 
 /* Add subtle divider between display and pad like Android */
