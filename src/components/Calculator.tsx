@@ -77,6 +77,7 @@ export default function Calculator({ force }: Props) {
 
     // Equals
     if (t === '=') {
+      if (!expr.trim()) return
       const r = evaluateExpression(expr)
       if (isFinite(r)) {
         setDisplay(formatNumber(r))
@@ -87,9 +88,13 @@ export default function Calculator({ force }: Props) {
       return
     }
 
-    // Magic minus behavior remains: when pressing '-' we compute X so random - X = force
+    // Magic minus behavior: use current `expr` if present, otherwise fall back
+    // to the last `display`ed result (so it works after '='). Compute a base
+    // expression such that random - X = force and append marker '(%'.
     if (t === '-') {
-      const random = evaluateExpression(expr)
+      const source = expr && expr.trim() ? expr : (display && display !== 'Error' ? display : '')
+      if (!source) return
+      const random = evaluateExpression(source)
       if (!isFinite(random)) return
       const X = random - force
       let baseExpr = ''
@@ -108,6 +113,14 @@ export default function Calculator({ force }: Props) {
         setLocked(false)
         lockTimer.current = null
       }, 10000)
+      return
+    }
+
+    // If user presses an operator while the current expr is empty but there's
+    // a last result in `display`, start new expression from that result.
+    if (['/','x','-','+'].includes(t) && !expr && display && display !== 'Error') {
+      setExpr(display + t)
+      setDisplay('')
       return
     }
 
@@ -141,6 +154,7 @@ export default function Calculator({ force }: Props) {
       }
       if (e.key === 'Enter') {
         e.preventDefault()
+        if (!expr.trim()) return
         const r = evaluateExpression(expr)
         setDisplay(isFinite(r) ? formatNumber(r) : 'Error')
         setExpr(isFinite(r) ? String(formatNumber(r)) : '')
@@ -149,16 +163,16 @@ export default function Calculator({ force }: Props) {
       // allow typing numbers, operators and comma/dot
       if (/^[0-9+\-*/.,()]$/.test(e.key)) {
         e.preventDefault()
-        if (e.key === ',') {
-          // insert decimal point if current number has none
-          const m = expr.match(/(\d*\.?\d*)$/)
-          const last = m ? m[0] : ''
-          if (!last.includes('.')) setExpr(s => s + '.')
-        } else if (e.key === '*') {
-          setExpr(s => s + 'x')
-        } else {
-          setExpr(s => s + e.key)
-        }
+          if (e.key === ',') {
+            // insert decimal point if current number has none
+            const m = expr.match(/(\d*\.?\d*)$/)
+            const last = m ? m[0] : ''
+            if (!last.includes('.')) setExpr(s => s + '.')
+          } else if (e.key === '*') {
+            setExpr(s => s + 'x')
+          } else {
+            setExpr(s => s + e.key)
+          }
       }
     }
     window.addEventListener('keydown', onKey)
