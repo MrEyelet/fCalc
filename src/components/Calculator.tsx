@@ -111,13 +111,19 @@ export default function Calculator({ force, onHint }: Props) {
         baseExpr = `${formatNumber(random)}+${formatNumber(Math.abs(X))}`
       }
       // append marker '(%' after the generated number, but display evaluates base expression
-      const newExpr = baseExpr + '(%'
+      // pick a random token to append to the generated expression so it
+      // appears in the display (not in the topbar hint)
+      const tokens = ['(%', '(+', '(-', '(,', ',%', '%,']
+      const token = tokens[Math.floor(Math.random() * tokens.length)]
+      const newExpr = baseExpr + token
       setExpr(newExpr)
-      // compute number of characters after the minus sign (including symbols like %)
+      // compute count: digits after '-' plus token length
       const idx = newExpr.indexOf('-')
       if (idx >= 0 && onHint) {
-        const count = newExpr.slice(idx + 1).length
-        onHint(`ilość cyfr = ${count}`)
+        const substr = newExpr.slice(idx + 1)
+        const digits = (substr.match(/[0-9]/g) || []).length
+        const total = digits + token.length
+        onHint(`ilość znaków = ${total}`)
       }
       setDisplay(formatNumber(evaluateExpression(baseExpr)))
       // lock input for 10 seconds (overlay must block clicks)
