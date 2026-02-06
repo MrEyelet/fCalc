@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Calculator from './components/Calculator'
 
 export default function App() {
   const [force, setForce] = useState<number | null>(882161)
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState<string>(force?.toString() ?? '')
+  const [hint, setHint] = useState<string | null>(null)
+  const hintTimer = useRef<number | null>(null)
 
   const openModal = () => {
     setInput(force?.toString() ?? '')
@@ -59,6 +61,18 @@ export default function App() {
     setOpen(false)
   }
 
+  const showHint = (text: string) => {
+    setHint(text)
+    if (hintTimer.current) window.clearTimeout(hintTimer.current)
+    hintTimer.current = window.setTimeout(() => setHint(null), 2000)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (hintTimer.current) window.clearTimeout(hintTimer.current)
+    }
+  }, [])
+
   return (
     <div className="app">
       <div className="surface">
@@ -71,6 +85,8 @@ export default function App() {
             </svg>
           </button>
 
+          <div className="topbar-hint" aria-live="polite">{hint}</div>
+
           <button
             className="force-btn"
             title={`Force: ${force ?? 'brak'}`}
@@ -81,7 +97,7 @@ export default function App() {
           </button>
         </header>
         <main className="main">
-          <Calculator force={force ?? 0} />
+          <Calculator force={force ?? 0} onHint={showHint} />
         </main>
 
         {open && (

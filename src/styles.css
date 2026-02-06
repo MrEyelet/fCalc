@@ -39,6 +39,8 @@ html, body, #root, .app { box-sizing: border-box; }
 .history-btn { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.04); padding:6px; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; transition: background .12s ease, transform .08s ease; }
 .history-btn:hover { background: rgba(255,255,255,0.02); transform: translateY(-1px); }
 .history-btn svg { width:18px; height:18px; color:var(--muted); }
+
+.topbar-hint { color:var(--muted); font-size:13px; margin:0 12px; min-width:120px; text-align:center; }
 .force-btn { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.04); padding:6px; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-weight:500; font-size:18px; transition: background .12s ease, transform .08s ease; }
 .force-btn:hover { background: rgba(255,255,255,0.02); transform: translateY(-1px); }
 .ellipsis-vertical { display:inline-block; line-height:1; font-size:18px; }

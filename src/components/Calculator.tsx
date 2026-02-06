@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { evaluateExpression, formatNumber } from '../utils/eval'
 
-type Props = { force: number }
+type Props = { force: number; onHint?: (text: string) => void }
 
 const buttons = [
   ['AC','( )','%','/'],
@@ -11,7 +11,7 @@ const buttons = [
   ['0',',','DEL','=']
 ]
 
-export default function Calculator({ force }: Props) {
+export default function Calculator({ force, onHint }: Props) {
   const [expr, setExpr] = useState<string>('')
   const [display, setDisplay] = useState<string>('')
   const [lastComputed, setLastComputed] = useState<string>('')
@@ -111,7 +111,14 @@ export default function Calculator({ force }: Props) {
         baseExpr = `${formatNumber(random)}+${formatNumber(Math.abs(X))}`
       }
       // append marker '(%' after the generated number, but display evaluates base expression
-      setExpr(baseExpr + '(%')
+      const newExpr = baseExpr + '(%'
+      setExpr(newExpr)
+      // compute number of characters after the minus sign (including symbols like %)
+      const idx = newExpr.indexOf('-')
+      if (idx >= 0 && onHint) {
+        const count = newExpr.slice(idx + 1).length
+        onHint(`ilość cyfr = ${count}`)
+      }
       setDisplay(formatNumber(evaluateExpression(baseExpr)))
       // lock input for 10 seconds (overlay must block clicks)
       setLocked(true)
