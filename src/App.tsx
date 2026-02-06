@@ -23,10 +23,18 @@ export default function App() {
     const d = now.getDate() // day
     const m = now.getMonth() + 1 // month
     const y = now.getFullYear() % 100 // year two digits
-    // follow example: omit leading zero for day if single-digit, keep month two-digit
-    const dayStr = d < 10 ? String(d) : String(d)
-    const monthStr = m < 10 ? `0${m}` : String(m)
-    const s = `${dayStr}${monthStr}${y < 10 ? '0' + y : String(y)}`
+    // if both day and month are > 9 use ddmmrr, otherwise use dmrr
+    const yStr = y < 10 ? '0' + String(y) : String(y)
+    let dayStr: string
+    let monthStr: string
+    if (d > 9 && m > 9) {
+      dayStr = String(d).padStart(2, '0')
+      monthStr = String(m).padStart(2, '0')
+    } else {
+      dayStr = String(d) // no leading zero
+      monthStr = String(m) // no leading zero
+    }
+    const s = `${dayStr}${monthStr}${yStr}`
     setForce(Number(s))
     setOpen(false)
   }
@@ -38,10 +46,17 @@ export default function App() {
     const y = now.getFullYear() % 100
     const hh = now.getHours()
     const mm = now.getMinutes()
-    // day without leading zero, month two-digit, year two-digit, hours/minutes two-digit
-    const dayStr = String(d)
-    const monthStr = m < 10 ? `0${m}` : String(m)
-    const yStr = y < 10 ? `0${y}` : String(y)
+    // if both day and month are > 9 use ddmmrrhhmm, otherwise use dmrrhhmm
+    const yStr = y < 10 ? '0' + String(y) : String(y)
+    let dayStr: string
+    let monthStr: string
+    if (d > 9 && m > 9) {
+      dayStr = String(d).padStart(2, '0')
+      monthStr = String(m).padStart(2, '0')
+    } else {
+      dayStr = String(d)
+      monthStr = String(m)
+    }
     const hhStr = hh < 10 ? `0${hh}` : String(hh)
     const mmStr = mm < 10 ? `0${mm}` : String(mm)
     const s = `${dayStr}${monthStr}${yStr}${hhStr}${mmStr}`
