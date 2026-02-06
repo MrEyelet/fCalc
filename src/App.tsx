@@ -6,7 +6,6 @@ export default function App() {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState<string>(force?.toString() ?? '')
   const [hint, setHint] = useState<string | null>(null)
-  const hintTimer = useRef<number | null>(null)
 
   const openModal = () => {
     setInput(force?.toString() ?? '')
@@ -61,10 +60,13 @@ export default function App() {
     setOpen(false)
   }
 
+  const hintTimer = useRef<number | null>(null)
+
+  // showHint sets a hint in the topbar for 3 seconds
   const showHint = (text: string) => {
     setHint(text)
     if (hintTimer.current) window.clearTimeout(hintTimer.current)
-    hintTimer.current = window.setTimeout(() => setHint(null), 2000)
+    hintTimer.current = window.setTimeout(() => setHint(null), 3000)
   }
 
   useEffect(() => {
