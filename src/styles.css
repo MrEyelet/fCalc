@@ -34,8 +34,11 @@ html, body, #root, .app { box-sizing: border-box; }
 
 /* Surface fills viewport and arranges content vertically */
 .surface { display:flex; flex-direction:column; height:100%; }
-.topbar { padding:12px; display:flex; justify-content:flex-end; flex:0 0 56px; }
-.topbar { padding:12px; display:flex; justify-content:flex-end; }
+.topbar { padding:12px; display:flex; justify-content:space-between; flex:0 0 56px; align-items:center; }
+
+.history-btn { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.04); padding:6px; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; transition: background .12s ease, transform .08s ease; }
+.history-btn:hover { background: rgba(255,255,255,0.02); transform: translateY(-1px); }
+.history-btn svg { width:18px; height:18px; color:var(--muted); }
 .force-btn { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.04); padding:6px; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-weight:500; font-size:18px; transition: background .12s ease, transform .08s ease; }
 .force-btn:hover { background: rgba(255,255,255,0.02); transform: translateY(-1px); }
 .ellipsis-vertical { display:inline-block; line-height:1; font-size:18px; }
@@ -51,11 +54,16 @@ html, body, #root, .app { box-sizing: border-box; }
 .modal-close { margin-top:12px; background:transparent; border:none; color:var(--muted); cursor:pointer }
 
 .main { flex:1 1 auto; display:flex; min-height:0; }
-.calc { padding-bottom: 0; width:100%; display:flex; flex-direction:column; height:100%; min-height:0; }
+.calc { padding-bottom: 0; width:100%; display:flex; flex-direction:column; height:100%; min-height:0; position:relative; }
 .calc .display { background: transparent; padding:18px; border-radius:12px; text-align:right; font-size:32px; font-weight:500; box-shadow: inset 0 -1px 0 rgba(255,255,255,.02); color:var(--text); flex: 0 0 30%; }
 .calc .expr { color:var(--muted); font-size:14px; text-align:right; margin-top: 18px; min-height:18px; }
 
 .pad { display:grid; grid-template-columns: repeat(4,1fr); grid-auto-rows: auto; gap:2px; margin-top:8px; padding: 4px 4px 4px; flex: 0 0 70%; min-height:0; align-content:start; justify-items:center; align-items:center; overflow:auto }
+
+.chevron-wrap { position:absolute; left:12px; top:28%; z-index:30; display:block; }
+.chevron-btn { background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,.04); padding:6px; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; transition: background .12s ease, transform .08s ease; }
+.chevron-btn:hover { background: rgba(255,255,255,0.02); transform: translateY(-1px); }
+.chevron-btn svg { width:18px; height:18px; }
 /* Keys: circular, consistent size matching Motorola */
 .key { background:var(--key-bg); color:var(--text); border:none; font-size:28px; display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:1/1; border-radius:50%; box-shadow: 0 10px 26px var(--key-elev); transition: transform .06s ease, box-shadow .06s ease, background .06s ease; user-select:none; -webkit-tap-highlight-color: transparent; }
 .key:active { transform: translateY(2px) scale(.995); box-shadow: 0 6px 12px rgba(0,0,0,.6); }

@@ -63,6 +63,14 @@ export default function App() {
     <div className="app">
       <div className="surface">
         <header className="topbar">
+          <button className="history-btn" title="Historia" aria-label="Historia (brak funkcji)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 12a9 9 0 1 0-2.53 5.88" />
+              <path d="M21 7v5h-5" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+          </button>
+
           <button
             className="force-btn"
             title={`Force: ${force ?? 'brak'}`}

@@ -89,6 +89,7 @@ export default function Calculator({ force }: Props) {
         setDisplay(formatNumber(r))
         setExpr('')
       } else {
+        console.error('Evaluation error for expression:', expr)
         setDisplay('Error')
       }
       return
@@ -190,8 +191,14 @@ export default function Calculator({ force }: Props) {
         e.preventDefault()
         if (!expr.trim()) return
         const r = evaluateExpression(expr)
-        setDisplay(isFinite(r) ? formatNumber(r) : 'Error')
-        setExpr(isFinite(r) ? String(formatNumber(r)) : '')
+        if (isFinite(r)) {
+          setDisplay(formatNumber(r))
+          setExpr(String(formatNumber(r)))
+        } else {
+          console.error('Evaluation error for expression (keyboard):', expr)
+          setDisplay('Error')
+          setExpr('')
+        }
         return
       }
       // allow typing numbers, operators and comma/dot
@@ -230,6 +237,17 @@ export default function Calculator({ force }: Props) {
         </div>
         <div className="expr">{lastComputed}</div>
       </div>
+      <div className="chevron-wrap" aria-hidden="true">
+        <button className="chevron-btn" title="Historia klawiszy (brak funkcji)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            {/* chevron up */}
+            <polyline points="6 10 12 4 18 10" />
+            {/* chevron down */}
+            <polyline points="6 14 12 20 18 14" />
+          </svg>
+        </button>
+      </div>
+
       <div className="pad">
         {buttons.flat().map((b) => {
           const classes = ['key']
