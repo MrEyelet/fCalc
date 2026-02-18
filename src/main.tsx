@@ -5,7 +5,9 @@ import './styles.css'
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {})
+    // register service worker relative to the app base (works on GitHub Pages)
+    const swPath = import.meta.env.BASE_URL + 'sw.js'
+    navigator.serviceWorker.register(swPath).catch(() => {})
   })
 }
 
