@@ -123,8 +123,7 @@ export default function App() {
               <button className="modal-close-x" aria-label="Zamknij modal" onClick={() => setOpen(false)}>✕</button>
               <h3>Ustaw Force number</h3>
               <label>
-                Własny numer
-                <input value={input} onChange={e => setInput(e.target.value)} />
+                <input placeholder="Wpisz numer" value={input} onChange={e => setInput(e.target.value)} />
               </label>
               <div className="modal-actions">
                 <button className="btn" onClick={applyCustom}>Zapisz</button>
