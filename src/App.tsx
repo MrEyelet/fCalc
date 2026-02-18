@@ -120,6 +120,7 @@ export default function App() {
         {open && (
           <div className="modal-overlay" onMouseDown={() => setOpen(false)}>
             <div className="modal" onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+              <button className="modal-close-x" aria-label="Zamknij modal" onClick={() => setOpen(false)}>✕</button>
               <h3>Ustaw Force number</h3>
               <label>
                 Własny numer
