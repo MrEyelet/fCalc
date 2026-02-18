@@ -193,7 +193,13 @@ export default function Calculator({ force, onHint }: Props) {
   // keyboard support: Backspace/Delete should act like DEL, Enter like '='
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      // ignore keyboard while locked
+      // if user is focused on a form field (input/textarea/select or contentEditable),
+      // skip global keyboard handling entirely so the field receives events normally
+      const active = document.activeElement as HTMLElement | null
+      const tag = active && active.tagName ? active.tagName.toLowerCase() : ''
+      const isFormField = !!active && (tag === 'input' || tag === 'textarea' || tag === 'select' || active.isContentEditable)
+      if (isFormField) return
+      // ignore keyboard while locked for everything else
       if (locked) { e.preventDefault(); return }
       if (e.key === 'Backspace' || e.key === 'Delete') {
         e.preventDefault()
