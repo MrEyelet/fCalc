@@ -4,8 +4,8 @@
   "start_url": "/fCalc/",
   "scope": "/fCalc/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ff9800",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/fCalc/icons/icon-192.svg",
