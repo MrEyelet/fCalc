@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="16" fill="#ff9800" />
-  <g transform="translate(8,8)" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="700">
-    <!-- Draw dividing lines -->
-    <line x1="88" y1="0" x2="88" y2="176" stroke="#ffffff" stroke-width="4" />
-    <line x1="0" y1="88" x2="176" y2="88" stroke="#ffffff" stroke-width="4" />
+  <rect width="192" height="192" rx="16" fill="#000000" />
+  <!-- Quadrants padding 8 -> inner size 176, each quadrant 88 -->
+  <rect x="8" y="8" width="88" height="88" rx="8" fill="#d3d3d3" />
+  <rect x="96" y="8" width="88" height="88" rx="8" fill="#4a4a4a" />
+  <rect x="8" y="96" width="88" height="88" rx="8" fill="#9e9e9e" />
+  <rect x="96" y="96" width="88" height="88" rx="8" fill="#6e6e6e" />
 
-    <!-- Symbols -->
-    <text x="44" y="56" font-size="48">−</text>
-    <text x="132" y="56" font-size="48">+</text>
-    <text x="44" y="140" font-size="48">×</text>
-    <text x="132" y="140" font-size="48">=</text>
-  </g>
+  <!-- Symbols: use black on light, white on dark -->
+  <text x="52" y="64" font-size="48" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#000000">−</text>
+  <text x="140" y="64" font-size="48" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+  <text x="52" y="148" font-size="48" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#000000">×</text>
+  <text x="140" y="148" font-size="48" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#ffffff">=</text>
 </svg>
