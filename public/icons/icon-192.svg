@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="16" fill="#ff9800" />
+  <g transform="translate(8,8)" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="700">
+    <!-- Draw dividing lines -->
+    <line x1="88" y1="0" x2="88" y2="176" stroke="#ffffff" stroke-width="4" />
+    <line x1="0" y1="88" x2="176" y2="88" stroke="#ffffff" stroke-width="4" />
+
+    <!-- Symbols -->
+    <text x="44" y="56" font-size="48">−</text>
+    <text x="132" y="56" font-size="48">+</text>
+    <text x="44" y="140" font-size="48">×</text>
+    <text x="132" y="140" font-size="48">=</text>
+  </g>
+</svg>
