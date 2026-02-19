@@ -1,6 +1,6 @@
 {
-  "name": "fCalc",
-  "short_name": "fCalc",
+  "name": "Calculator",
+  "short_name": "Calculator",
   "start_url": "/fCalc/",
   "scope": "/fCalc/",
   "display": "standalone",
