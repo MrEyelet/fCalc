@@ -1,0 +1,22 @@
+{
+  "name": "fCalc",
+  "short_name": "fCalc",
+  "start_url": "/fCalc/",
+  "scope": "/fCalc/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff9800",
+  "icons": [
+    {
+      "src": "/fCalc/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/fCalc/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
