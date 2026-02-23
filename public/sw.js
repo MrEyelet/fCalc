@@ -42,7 +42,7 @@ self.addEventListener('fetch', event => {
         const copy = response.clone()
         caches.open(CACHE_NAME).then(cache => cache.put(cleanUrl(request), copy)).catch(()=>{})
         return response
-      }).catch(() => caches.match(BASE + 'offline.html'))
+      }).catch(() => caches.match(BASE + 'index.html').then(r => r || caches.match(BASE)))
     )
     return
   }
