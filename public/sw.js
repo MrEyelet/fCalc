@@ -1,12 +1,15 @@
 const CACHE_NAME = 'fcalc-cache-v1'
+
+// Compute base path dynamically so the service worker works when the app
+// is served from a subpath (e.g. GitHub Pages) or from root.
+const BASE = self.location.pathname.replace(/\/sw\.js$/, '/')
 const ASSETS = [
-  '/',
-  '/fCalc/',
-  '/fCalc/index.html',
-  '/fCalc/offline.html',
-  '/fCalc/manifest.webmanifest',
-  '/fCalc/icons/icon-192.svg',
-  '/fCalc/icons/icon-512.svg'
+  BASE,
+  BASE + 'index.html',
+  BASE + 'offline.html',
+  BASE + 'manifest.webmanifest',
+  BASE + 'icons/icon-192.svg',
+  BASE + 'icons/icon-512.svg'
 ]
 
 self.addEventListener('install', event => {
@@ -39,7 +42,7 @@ self.addEventListener('fetch', event => {
         const copy = response.clone()
         caches.open(CACHE_NAME).then(cache => cache.put(cleanUrl(request), copy)).catch(()=>{})
         return response
-      }).catch(() => caches.match('/fCalc/offline.html'))
+      }).catch(() => caches.match(BASE + 'offline.html'))
     )
     return
   }
