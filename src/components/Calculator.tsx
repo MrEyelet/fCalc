@@ -239,6 +239,32 @@ export default function Calculator({ force, onHint }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [expr])
 
+  // Persist minimal state to localStorage so app works across long offline periods
+  const STORAGE_KEY = 'fcalc_state_v1'
+
+  // load saved state on mount
+  React.useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (!raw) return
+      const obj = JSON.parse(raw)
+      if (obj?.expr) setExpr(String(obj.expr))
+      if (obj?.display) setDisplay(String(obj.display))
+    } catch (e) {
+      // ignore corrupt data
+    }
+  }, [])
+
+  // save state when expr or display changes
+  React.useEffect(() => {
+    try {
+      const obj = { expr, display, savedAt: Date.now() }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj))
+    } catch (e) {
+      // storage might be full — ignore
+    }
+  }, [expr, display])
+
   // cleanup lock timer on unmount
   React.useEffect(() => {
     return () => {
