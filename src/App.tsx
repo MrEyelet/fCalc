@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Calculator from './components/Calculator'
 
+function getCurrentDateNumber() {
+  const now = new Date()
+  const day = String(now.getDate())
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const year = String(now.getFullYear() % 100).padStart(2, '0')
+
+  return Number(`${day}${month}${year}`)
+}
+
 export default function App() {
-  const [force, setForce] = useState<number | null>(882161)
+  const [force, setForce] = useState<number | null>(() => getCurrentDateNumber())
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState<string>(force?.toString() ?? '')
   const [hint, setHint] = useState<string | null>(null)
@@ -19,15 +28,7 @@ export default function App() {
   }
 
   const applyDate = () => {
-    const now = new Date()
-    const d = now.getDate() // day
-    const m = now.getMonth() + 1 // month
-    const y = now.getFullYear() % 100 // year two digits
-    const yStr = y < 10 ? '0' + String(y) : String(y)
-    const dayStr = String(d)
-    const monthStr = String(m).padStart(2, '0')
-    const s = `${dayStr}${monthStr}${yStr}`
-    setForce(Number(s))
+    setForce(getCurrentDateNumber())
     setOpen(false)
   }
 
