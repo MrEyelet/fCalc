@@ -49,17 +49,6 @@ export default function App() {
     setOpen(false)
   }
 
-  const applyTimePlus5 = () => {
-    const now = new Date(Date.now() + 5 * 60 * 1000)
-    const hh = now.getHours()
-    const mm = now.getMinutes()
-    const hhStr = hh < 10 ? `0${hh}` : String(hh)
-    const mmStr = mm < 10 ? `0${mm}` : String(mm)
-    const s = `${hhStr}${mmStr}`
-    setForce(Number(s))
-    setOpen(false)
-  }
-
   const hintTimer = useRef<number | null>(null)
 
   // showHint sets a hint in the topbar for 3 seconds
@@ -114,7 +103,6 @@ export default function App() {
                 <button className="btn" onClick={applyCustom}>Zapisz</button>
                 <button className="btn" onClick={applyDate}>Ustaw na dzisiejszą datę (ddmmyy)</button>
                 <button className="btn" onClick={applyDateTimePlus5}>Data i godzina (+5min)</button>
-                <button className="btn" onClick={applyTimePlus5}>Ustaw na czas +5m (hhmm)</button>
               </div>
               <button className="modal-close" onClick={() => setOpen(false)}>Anuluj</button>
             </div>
