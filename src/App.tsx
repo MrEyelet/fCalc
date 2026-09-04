@@ -101,7 +101,7 @@ export default function App() {
               </label>
               <div className="modal-actions">
                 <button className="btn" onClick={applyCustom}>Zapisz</button>
-                <button className="btn" onClick={applyDate}>Ustaw na dzisiejszą datę (ddmmyy)</button>
+                <button className="btn" onClick={applyDate}>Przywróć dzisiejszą datę</button>
                 <button className="btn" onClick={applyDateTimePlus5}>Data i godzina (+5min)</button>
               </div>
               <button className="modal-close" onClick={() => setOpen(false)}>Anuluj</button>
