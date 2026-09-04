@@ -23,17 +23,9 @@ export default function App() {
     const d = now.getDate() // day
     const m = now.getMonth() + 1 // month
     const y = now.getFullYear() % 100 // year two digits
-    // if both day and month are > 9 use ddmmrr, otherwise use dmrr
     const yStr = y < 10 ? '0' + String(y) : String(y)
-    let dayStr: string
-    let monthStr: string
-    if (d > 9 && m > 9) {
-      dayStr = String(d).padStart(2, '0')
-      monthStr = String(m).padStart(2, '0')
-    } else {
-      dayStr = String(d) // no leading zero
-      monthStr = String(m) // no leading zero
-    }
+    const dayStr = String(d)
+    const monthStr = String(m).padStart(2, '0')
     const s = `${dayStr}${monthStr}${yStr}`
     setForce(Number(s))
     setOpen(false)
@@ -46,17 +38,9 @@ export default function App() {
     const y = now.getFullYear() % 100
     const hh = now.getHours()
     const mm = now.getMinutes()
-    // if both day and month are > 9 use ddmmrrhhmm, otherwise use dmrrhhmm
     const yStr = y < 10 ? '0' + String(y) : String(y)
-    let dayStr: string
-    let monthStr: string
-    if (d > 9 && m > 9) {
-      dayStr = String(d).padStart(2, '0')
-      monthStr = String(m).padStart(2, '0')
-    } else {
-      dayStr = String(d)
-      monthStr = String(m)
-    }
+    const dayStr = String(d)
+    const monthStr = String(m).padStart(2, '0')
     const hhStr = hh < 10 ? `0${hh}` : String(hh)
     const mmStr = mm < 10 ? `0${mm}` : String(mm)
     const s = `${dayStr}${monthStr}${yStr}${hhStr}${mmStr}`
